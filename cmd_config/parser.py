@@ -48,6 +48,7 @@ def parse_command(config, listsep, equalstr):
             equalstr=_equalstr,
             listsep=_listsep,
         ),
+        *args_cmd(args),
         *parse_command(subcommand, _listsep, _equalstr)
     ]
     return cmd

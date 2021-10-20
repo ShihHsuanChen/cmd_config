@@ -22,7 +22,7 @@ setup(
     },
     entry_points={
         'console_scripts': [
-            'config2cmd = cmd_config.config2cmd:main'
+            'config2cmd = cmd_config.main:main'
         ]
     },
     setup_requires=['setuptools-git-versioning'],

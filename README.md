@@ -102,3 +102,7 @@ commands:
             - a
             - l
 ```
+Gives
+- pyinstaller001: `pyinstaller -i -y --file-name bbb --group-name g1,g2`
+- celery001: `celery --app=main.celery worker --queues=queue1 queue2 --concurrency=3`
+- list: `ls -a -l`

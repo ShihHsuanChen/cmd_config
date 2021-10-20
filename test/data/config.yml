@@ -1,0 +1,35 @@
+version: '3'
+
+equalstr: True
+
+commands:
+    pyinstaller001:
+        executable: pyinstaller
+        listsep: ','
+        equalstr: False
+        positional:
+            - aaa
+        flags:
+            - i
+            - y
+        optional:
+            file-name: bbb
+            group_name:
+                - g1
+                - g2
+    celery001:
+        executable: celery
+        optional:
+            app: main.celery
+        subcommand:
+            executable: worker
+            optional:
+                queues:
+                    - queue1
+                    - queue2
+                concurrency: 3
+    list:
+        executable: ls
+        flags:
+            - a
+            - l

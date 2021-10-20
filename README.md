@@ -6,7 +6,7 @@ Convert yaml config to command line string
 ## Install
 
 ```shell=
-$ pip install http://10.0.4.52:3000/j0018/cmd_config.git@<tag>
+$ pip install git+http://10.0.4.52:3000/j0018/cmd_config.git@<tag>
 ```
 
 ## Usage

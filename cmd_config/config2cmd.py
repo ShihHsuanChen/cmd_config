@@ -27,7 +27,7 @@ def config2cmd(config_file, run=None, env_file=None):
             for k, cmd in cmds.items():
                 print(f'{k}:', ' '.join(cmd))
         elif len(run) == 0:
-            for cmd in cmds:
+            for cmd in cmds.value():
                 run_cmd(cmd, env_file=env_file)
         else:
             for r in run:

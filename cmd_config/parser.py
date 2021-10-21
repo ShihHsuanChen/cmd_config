@@ -13,11 +13,15 @@ except ImportError:
     from yaml import Loader, Dumper
 
 
-def flags_cmd(flags: list, global_config=dict()):
+def flags_cmd(flags: Union[str, List[str]], global_config=dict()):
+    if isinstance(flags, str):
+        flags = [flags]
     return [f'-{f}' for f in flags]
 
 
-def args_cmd(args: list, global_config=dict()):
+def args_cmd(args: Union[str, List[str]], global_config=dict()):
+    if isinstance(args, str):
+        args = [args]
     return [*args]
 
 

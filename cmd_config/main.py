@@ -12,6 +12,7 @@ def main():
     parser.add_argument(
         '-r', '--run',
         type=str,
+        nargs='*',
         default=None,
         help='run command from config file'
     )
@@ -27,7 +28,7 @@ def main():
     config2cmd(
         args.target,
         run=args.run,
-        env_file=arg.env_file,
+        env_file=args.env_file,
     )
 
 

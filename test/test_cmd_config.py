@@ -10,7 +10,20 @@ def get_data_path(fname):
 def test_parse():
     fname = get_data_path('config.yml')
     cmds = cmd_config.parser.parse(fname)
-    assert {'pyinstaller001', 'celery001', 'list'} == set(cmds.keys())
-    assert cmds['pyinstaller001'] == ['pyinstaller', '-i', '-y', '--file-name', 'bbb', '--group-name', 'g1,g2', 'aaa']
-    assert cmds['celery001'] == ['celery', '--app=main.celery', 'worker', '--queues=queue1 queue2', '--concurrency=3']
-    assert cmds['list'] == ['ls', '-a', '-l']
+    assert {'pyinstaller001', 'celery001', 'list', 'echo'} == set(cmds.keys())
+    assert cmds['pyinstaller001'] == (
+        ['pyinstaller', '-i', '-y', '--file-name', 'bbb', '--group-name', 'g1,g2', 'aaa'],
+        {}
+    )
+    assert cmds['celery001'] == (
+        ['celery', '--app=main.celery', 'worker', '--queues=queue1 queue2', '--concurrency=3'],
+        {},
+    )
+    assert cmds['list'] == (
+        ['ls', '-a', '-l'],
+        {},
+    )
+    assert cmds['echo'] == (
+        ['echo', 'print', '$VAR1', '$VAR2', '$PATH'],
+        {'VAR1': 'Hello', 'VAR2': 'World'},
+    )

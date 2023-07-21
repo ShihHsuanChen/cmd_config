@@ -33,3 +33,13 @@ commands:
         flags:
             - a
             - l
+    echo:
+        executable: echo
+        positional:
+            - print
+            - "$VAR1"
+            - "$VAR2"
+            - "$PATH"
+        environment:
+            VAR1: Hello
+            VAR2: World

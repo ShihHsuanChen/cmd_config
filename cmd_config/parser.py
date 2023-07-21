@@ -1,10 +1,11 @@
 import sys
 from yaml import load, dump
 from collections import OrderedDict
-from typing import List, Dict, Union
+from typing import List, Dict, Union, Tuple
 
 CmdType = List[str]
-CmdCollection = 'OrderedDict[str, CmdType]'
+CmdEnvType = Tuple[CmdType, Dict[str, str]]
+CmdEnvCollection = 'OrderedDict[str, CmdEnvType]'
 
 
 try:
@@ -65,19 +66,23 @@ def parse_command(config, global_config=dict()) -> CmdType:
     return cmd
 
 
-def parse_commands(commands, global_config=dict()) -> OrderedDict:
-    cmds = OrderedDict()
+def parse_commands(commands, global_config=dict()) -> CmdEnvCollection:
+    cmdenvs = OrderedDict()
     for k, v in commands.items():
-        cmds[k] = parse_command(v, global_config=global_config)
-    return cmds
+        cmdenvs[k] = (
+            parse_command(v, global_config=global_config),
+            parse_environments(v),
+        )
+    return cmdenvs
 
 
-def parse_environments():
-    # TODO
-    raise NotImplementedError
+def parse_environments(config):
+    env = config.get('environment', {})
+    env = {k: str(v) for k, v in env.items()}
+    return env
 
 
-def parse(ymlfile) -> Union[CmdCollection, CmdType]:
+def parse(ymlfile) -> Union[CmdEnvCollection, CmdEnvType]:
     with open(ymlfile, 'r') as fp:
         s = fp.read()
         data = load(s, Loader=Loader)
@@ -86,4 +91,4 @@ def parse(ymlfile) -> Union[CmdCollection, CmdType]:
     if commands:
         return parse_commands(commands, global_config=global_config)
     elif 'executable' in data:
-        return parse_command(data)
+        return parse_command(data), parse_environments(data)

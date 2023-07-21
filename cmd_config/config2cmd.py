@@ -1,15 +1,18 @@
 import os
 import subprocess
 import platform
-from dotenv import load_dotenv
-
 from collections import OrderedDict
+from typing import Dict, Optional
+
+from dotenv import load_dotenv
 from cmd_config.parser import parse
 
 
-def run_cmd(cmd, env_file=None):
+def run_cmd(cmd, env_dict: Dict[str, str], env_file: Optional[str] = None):
+    for k, v in env_dict.items():
+        os.environ[k] = v
     if env_file is not None:
-        load_dotenv(env_file)
+        load_dotenv(env_file, override=True)
     if platform.system() == 'Windows':
         cmd = [os.path.expandvars(c) for c in cmd]
         cmd = ' '.join(cmd)
@@ -20,25 +23,26 @@ def run_cmd(cmd, env_file=None):
 
 
 def config2cmd(config_file, run=None, env_file=None):
-    cmds = parse(config_file)
+    cmdenvs = parse(config_file)
 
-    if isinstance(cmds, OrderedDict): # CmdCollection
+    if isinstance(cmdenvs, OrderedDict): # CmdEnvCollection
         if run is None:
-            for k, cmd in cmds.items():
+            for k, (cmd, _) in cmdenvs.items():
                 print(f'{k}:', ' '.join(cmd))
         elif len(run) == 0:
-            for cmd in cmds.values():
-                run_cmd(cmd, env_file=env_file)
+            for (cmd, env) in cmdenvs.values():
+                run_cmd(cmd, env_dict=env, env_file=env_file)
         else:
             for r in run:
-                if r in cmds:
-                    run_cmd(cmds[r], env_file=env_file)
+                if r in cmdenvs:
+                    cmd, env = cmdenvs[r]
+                    run_cmd(cmd, env_dict=env, env_file=env_file)
                 else:
                     print(f'Cannot find command "{run}"')
 
-    elif isinstance(cmds, list): # CmdType
-        cmd = cmds
+    else: # CmdEnvType
+        cmd, env = cmdenvs
         if run is None:
             print(' '.join(cmd))
         else:
-            run_cmd(cmd, env_file=env_file)
+            run_cmd(cmd, env_dict=env, env_file=env_file)
